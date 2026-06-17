@@ -26,7 +26,7 @@
         canvas { display: block; width: 100%; height: 100%; cursor: none; }
 
         /* --- LAYERS --- */
-        #login-layer, #ui-layer, #shop-layer, #quest-layer, #help-layer, #game-over-layer, #pause-layer {
+        #login-layer, #ui-layer, #shop-layer, #quest-layer, #help-layer, #settings-layer, #game-over-layer, #pause-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 20;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -35,8 +35,7 @@
             transition: opacity 0.3s ease;
         }
 
-        #ui-layer, #game-over-layer, #shop-layer, #quest-layer, #help-layer, #pause-layer, #hud { display: none; }
-        
+        #ui-layer, #game-over-layer, #shop-layer, #quest-layer, #help-layer, #settings-layer, #pause-layer, #hud { display: none; }
         
         
         /* --- UI CARD DESIGN --- */
@@ -97,11 +96,12 @@
         .btn-chill { border-color: rgba(0,255,255,0.3); color: var(--primary); }
         .btn-rush { border-color: rgba(255, 68, 68, 0.3); color: var(--danger); }
         
-        .action-buttons { display: flex; gap: 10px; width: 100%; margin-top: 20px; }
-        .btn-icon { flex: 1; padding: 12px 0; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 20px; }
+        .btn-icon { padding: 12px 0; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: 0;}
         .btn-shop { border-color: var(--gold); color: var(--gold); }
         .btn-quest { border-color: var(--accent); color: var(--accent); }
-        .btn-help { border-color: #fff; color: #fff; flex: 0.4; }
+        .btn-help { border-color: #fff; color: #fff; }
+        .btn-setting-menu { border-color: #888; color: #fff; }
 
         /* HUD */
         .settings-area { position: absolute; top: 30px; left: 30px; display: flex; gap: 15px; z-index: 50; }
@@ -152,111 +152,53 @@
         .help-header { color: var(--primary); font-weight: bold; margin-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 3px; }
         .help-list li { margin-bottom: 5px; padding-left: 15px; position: relative; list-style: none; }
         .help-list li::before { content: "•"; color: var(--accent); position: absolute; left: 0; font-weight: bold; }
-        .stats-box { display: flex;justify-content: space-around;width: 100%;margin-bottom: 25px;background: rgba(0,0,0,0.3); padding: 15px;border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);
-    /* Dòng quan trọng để sửa lỗi lệch phải */
-    box-sizing: border-box; 
-}
+        .stats-box { display: flex;justify-content: space-around;width: 100%;margin-bottom: 25px;background: rgba(0,0,0,0.3); padding: 15px;border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; }
         .stat-item { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
         .stat-item:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background: rgba(255,255,255,0.1); }
         .stat-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        /* SỬA LỖI: Làm chữ kết quả sáng trưng và to rõ */
         .stat-row { 
-        display: flex; 
-        justify-content: space-between; 
-        width: 100%; 
-        margin: 8px 0; 
-        color: #ffffff !important; /* Màu trắng tinh */
-        font-weight: 900; /* In đậm */
-        border-bottom: 1px solid rgba(255,255,255,0.3); 
-        padding-bottom: 5px; 
-        font-size: 20px; /* Chữ to hơn */
-}
+            display: flex; justify-content: space-between; width: 100%; margin: 8px 0; color: #ffffff !important; font-weight: 900; 
+            border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; font-size: 20px; 
+        }
         .stat-number { font-size: 20px; font-weight: 800; color: white; }
 
+        /* --- SETTINGS MENU --- */
+        .setting-row { display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 25px; width: 100%; text-align: left;}
+        .setting-row label { color: var(--primary); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; font-size: 14px; display: flex; justify-content: space-between; width: 100%;}
+        .setting-slider { -webkit-appearance: none; width: 100%; height: 8px; border-radius: 5px; background: rgba(255,255,255,0.1); outline: none; transition: 0.2s; }
+        .setting-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 15px var(--accent); transition: 0.1s; }
+        .setting-slider:hover::-webkit-slider-thumb { transform: scale(1.2); }
+
         /* COMBO & NOTIFICATIONS */
-        /* SỬA: Căn giữa tuyệt đối bằng Flexbox */
-.combo-container { 
-    position: absolute; 
-    top: 0; left: 10; 
-    width: 100%; height: 100%; /* Phủ toàn màn hình để căn giữa chuẩn */
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    pointer-events: none; 
-    z-index: 5; 
-}
+        .combo-container { 
+            position: absolute; top: 0; left: 10; width: 100%; height: 100%; 
+            display: flex; justify-content: center; align-items: center; pointer-events: none; z-index: 5; 
+        }
         .combo-text { font-size: 100px; font-weight: 900; background: linear-gradient(45deg, #fff, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; opacity: 0; transition: 0.1s; }
         .combo-text.active { opacity: 0.8; transform: scale(1.2); }
-        /* SỬA LỖI: Combo hiện số cầu vồng chuẩn, không bị vuông */
         .combo-text.rainbow { 
-        background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet); 
-        background-size: 200% auto; 
-    
-    /* 3 dòng quan trọng để cắt màu vào chữ */
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+            background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet); background-size: 200% auto; 
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+            animation: shine 2s linear infinite; opacity: 0.9; transform: scale(1.5); text-shadow: none; 
+        }
+        .combo-text.godlike {
+            background: linear-gradient(180deg, #ffffff 10%, #e0ffff 50%, #00ffff 100%);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+            -webkit-text-stroke: 0;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 10px rgba(0, 255, 255, 0.7)) drop-shadow(0 0 20px rgba(0, 255, 255, 0.4));
+            animation: godGlow 2s ease-in-out infinite alternate; opacity: 1 !important; z-index: 100;
+        }
 
-    animation: shine 2s linear infinite; 
-    opacity: 0.9; 
-    transform: scale(1.5); 
-    text-shadow: none; 
-}
-   /* SỬA LỖI: Godlike Sang Trọng - Hiệu ứng Bạch Kim Tỏa Sáng (Không rung, không rối) */
-.combo-text.godlike {
-    /* Gradient chuyển màu: Trắng tinh -> Xanh băng -> Xanh Neon chân chữ */
-    background: linear-gradient(180deg, #ffffff 10%, #e0ffff 50%, #00ffff 100%);
-    
-    /* Kỹ thuật cắt màu vào chữ */
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-
-    /* BỎ viền stroke dày (nguyên nhân gây rối mắt) */
-    -webkit-text-stroke: 0;
-
-    /* Thay bằng hiệu ứng đổ bóng tầng (Layered Glow) mịn màng */
-    /* Lớp 1: Sáng tâm trắng | Lớp 2: Hào quang xanh gần | Lớp 3: Hào quang tỏa xa */
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9)) 
-            drop-shadow(0 0 10px rgba(0, 255, 255, 0.7))
-            drop-shadow(0 0 20px rgba(0, 255, 255, 0.4));
-
-    /* Animation: Phát sáng theo nhịp thở chậm rãi, uy lực */
-    animation: godGlow 2s ease-in-out infinite alternate;
-    opacity: 1 !important;
-    z-index: 100;
-}
-
-/* Thêm Keyframe mới cho hiệu ứng nhịp thở ánh sáng */
-@keyframes godGlow {
-    from { 
-        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8)) 
-                drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
-    }
-    to { 
-        /* Khi sáng nhất: Hào quang bùng nổ ra xa */
-        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)) 
-                drop-shadow(0 0 25px rgba(0, 255, 255, 0.9))
-                drop-shadow(0 0 50px rgba(0, 255, 255, 0.8));
-    }
-}
-/* --- CHẾ ĐỘ ĐIỆN ẢNH (CINEMATIC MODE) --- */
-/* Khi body có class 'cinematic', ẩn tất cả UI */
-body.cinematic #hud, 
-body.cinematic #ui-layer,
-body.cinematic #shop-layer,
-body.cinematic #quest-layer, 
-body.cinematic #help-layer,
-body.cinematic #pause-layer,
-body.cinematic #login-layer,
-body.cinematic .settings-area,
-body.cinematic .hud-right,
-body.cinematic #toast,
-body.cinematic .combo-container {
-    display: none !important;
-}
+        @keyframes godGlow {
+            from { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)) drop-shadow(0 0 25px rgba(0, 255, 255, 0.9)) drop-shadow(0 0 50px rgba(0, 255, 255, 0.8)); }
+        }
+        
+        /* --- CHẾ ĐỘ ĐIỆN ẢNH (CINEMATIC MODE) --- */
+        body.cinematic #hud, body.cinematic #ui-layer, body.cinematic #shop-layer, body.cinematic #quest-layer, body.cinematic #settings-layer, body.cinematic #help-layer, body.cinematic #pause-layer, body.cinematic #login-layer, body.cinematic .settings-area, body.cinematic .hud-right, body.cinematic #toast, body.cinematic .combo-container {
+            display: none !important;
+        }
+        
         @keyframes shine { to { background-position: 200%; } }
         @keyframes godShake { 0% { transform: scale(2) rotate(-2deg); } 50% { transform: scale(2) rotate(2deg); } }
 
@@ -273,7 +215,6 @@ body.cinematic .combo-container {
 
     <div class="settings-area">
         <button class="btn-setting" onclick="Game.togglePause()" id="btn-pause" style="display:none;">❚❚</button>
-        <button class="btn-setting" onclick="AudioEngine.toggleMute()" id="btn-mute">🔊</button>
     </div>
 
     <div class="hud-right" id="hud-currency" style="display:none;">
@@ -306,8 +247,29 @@ body.cinematic .combo-container {
                 <button class="btn btn-icon btn-quest" onclick="UI.toggleQuest(true)">📜 QUESTS</button>
                 <button class="btn btn-icon btn-help" onclick="UI.toggleHelp(true)">❓ GUIDE</button>
                 <button class="btn btn-icon btn-shop" onclick="UI.toggleShop(true)">🛒 SHOP</button>
+                <button class="btn btn-icon btn-setting-menu" onclick="UI.toggleSettings(true)">⚙️ SETTINGS</button>
             </div>
             <div style="margin-top: 15px; font-size: 10px; color: #666; cursor: pointer;" onclick="location.reload()">[ Switch Profile ]</div>
+        </div>
+    </div>
+
+    <div id="settings-layer">
+        <div class="panel-card">
+            <h2 style="color: #fff; margin-top: 0;">⚙️ SETTINGS</h2>
+            <div class="sub-title">System Configuration</div>
+            
+            <div class="setting-row">
+                <label>Âm lượng (Volume) <span id="vol-val" style="color: var(--gold);">50%</span></label>
+                <input type="range" id="vol-slider" class="setting-slider" min="0" max="100" value="50">
+            </div>
+            
+            <div class="setting-row">
+                <label>Độ nhạy chuột (Sensitivity) <span id="sens-val" style="color: var(--primary);">10</span></label>
+                <input type="range" id="sens-slider" class="setting-slider" min="1" max="10" value="10">
+                <small style="color: #888; font-size: 11px; margin-top: 8px;">Mức 10: Tốc độ gốc | Mức 1: Tạo độ trễ/Mượt mà</small>
+            </div>
+
+            <button class="btn" style="margin-top: 20px;" onclick="UI.toggleSettings(false)">Apply & Close</button>
         </div>
     </div>
 
@@ -317,11 +279,7 @@ body.cinematic .combo-container {
             <div class="sub-title">Lifetime Achievements</div>
             <div class="scroll-view">
                 <div class="list-grid">
-                    <div class="list-item quest-item" id="ach-played"><div class="item-icon">💡</div><div class="item-content"><div class="item-name">First Spark</div><div class="item-desc">Chơi 1 ván bất kỳ.</div></div><div class="ach-check"></div></div>
-                    <div class="list-item quest-item" id="ach-speedster"><div class="item-icon">⚡</div><div class="item-content"><div class="item-name">Chill Master</div><div class="item-desc">Đạt <b>Level 100</b> trong Chill Relax.</div></div><div class="ach-check"></div></div>
-                    <div class="list-item quest-item" id="ach-survivor"><div class="item-icon">🛡️</div><div class="item-content"><div class="item-name">Void Walker</div><div class="item-desc">Đạt <b>3000 điểm</b> trong Time Rush.</div></div><div class="ach-check"></div></div>
-                    <div class="list-item quest-item" id="ach-tycoon"><div class="item-icon">💎</div><div class="item-content"><div class="item-name">Star Tycoon</div><div class="item-desc">Tích lũy <b>50000 Stardust</b>.</div></div><div class="ach-check"></div></div>
-                </div>
+                    </div>
             </div>
             <button class="btn" style="margin-top: 20px;" onclick="UI.toggleQuest(false)">Close</button>
         </div>
@@ -418,12 +376,7 @@ body.cinematic .combo-container {
 
 <script>
 /**
- * COSMIC MANDALIGHT v10.0 - PERFECT RUN
- * Features: 
- * - Fixed Login & UI Buttons
- * - Boss Dimension: Chases player, Scattered Nodes (Non-linear)
- * - Time Rush Loot: Falling Light Beams, Guaranteed Rewards (Magnet/Freeze/Bomb)
- * - Balanced Gameplay, No Slash Mode.
+ * COSMIC MANDALIGHT v10.0 - SETTINGS UPDATE
  */
 
 const Config = {
@@ -470,9 +423,9 @@ const Player = {
     upgrades: { time: false, shield: false, bgflow: false, cursorLight: false, brush: false, prism: false, echo: false, stellarVIP: false, aura: false },
     equipped: { aura: false },
     achievements: { played: false, speedster: false, survivor: false, tycoon: false },
+    settings: { volume: 50, sensitivity: 10 },
 
     load() {
-        // NEW KEY FOR FRESH DATA v10
         const key = `cosmic_v10_stable_${LoginSystem.username}`;
         const saved = localStorage.getItem(key);
         if (saved) {
@@ -486,9 +439,11 @@ const Player = {
                 this.upgrades = {...this.upgrades, ...data.upgrades};
                 this.equipped = {...this.equipped, ...(data.equipped || {})};
                 if(data.achievements) this.achievements = {...this.achievements, ...data.achievements};
+                if(data.settings) this.settings = {...this.settings, ...data.settings};
             } catch (e) { console.log("Data reset due to error"); }
         }
         UI.updateLobby();
+        UI.applySettingsToDOM();
     },
     save() {
         const key = `cosmic_v10_stable_${LoginSystem.username}`;
@@ -500,7 +455,8 @@ const Player = {
             bestRushScore: this.bestRushScore,
             upgrades: this.upgrades,
             equipped: this.equipped,
-            achievements: this.achievements
+            achievements: this.achievements,
+            settings: this.settings
         }));
     }
 };
@@ -509,8 +465,6 @@ const Prices = { time: 500, shield: 1000, bgflow: 2000, cursorLight: 2500, brush
 
 // --- ENTITIES ---
 
-// BOSS (CHASES PLAYER, SCATTERED NODES)
-// --- BOSS DIMENSION ENTITY (ĐÃ SỬA: SINH RA XA NGƯỜI CHƠI) ---
 class Boss {
     constructor() { 
         this.active = false; 
@@ -524,36 +478,22 @@ class Boss {
         if(this.active) return;
         this.active = true;
 
-        // --- SỬA LỖI: TÍNH TOÁN VỊ TRÍ XA NGƯỜI CHƠI NHẤT ---
-        // Nếu chuột đang ở bên Trái -> Boss sinh ra bên Phải (cách lề 150px)
-        // Nếu chuột đang ở bên Phải -> Boss sinh ra bên Trái
         this.x = (State.mouseX < w / 2) ? w - 150 : 150;
-        
-        // Nếu chuột đang ở Bên Trên -> Boss sinh ra Bên Dưới
-        // Nếu chuột đang ở Bên Dưới -> Boss sinh ra Bên Trên
         this.y = (State.mouseY < h / 2) ? h - 150 : 150;
-        // ----------------------------------------------------
 
         State.inBossDimension = true;
         State.shake = 30; 
         AudioEngine.trigger('bossSpawn');
         
-        // Tạo 10 điểm yếu rải rác ngẫu nhiên (tránh vị trí của Boss một chút)
         this.weakPoints = [];
         for(let i=0; i<10; i++) {
             let wx, wy;
-            // Đảm bảo điểm yếu không sinh ra trùng ngay vị trí Boss vừa xuất hiện
             do {
                 wx = Math.random() * (w - 100) + 50;
                 wy = Math.random() * (h - 100) + 50;
             } while (Math.hypot(wx - this.x, wy - this.y) < 100);
 
-            this.weakPoints.push({
-                x: wx,
-                y: wy,
-                active: true,
-                size: 25 
-            });
+            this.weakPoints.push({ x: wx, y: wy, active: true, size: 25 });
         }
     }
     
@@ -601,12 +541,8 @@ class Boss {
     update(mx, my) {
         if(!this.active) return;
         this.angle += 0.015; 
-        
-        // --- ĐÃ SỬA: GIẢM TỐC ĐỘ BOSS ---
-        // Hạ từ 0.015 xuống 0.005 (Boss sẽ trôi rất chậm, dễ né hơn)
         this.x += (mx - this.x) * 0.005;
         this.y += (my - this.y) * 0.005;
-        
         this.checkHit(mx, my); 
     }
     draw(ctx) {
@@ -638,12 +574,12 @@ class Boss {
         ctx.restore();
     }
 }
-// POWER UP (FALLING BEAM)
+
 class PowerUp {
     constructor(w) {
         this.x = Math.random() * (w - 60) + 30; this.y = -150; 
         this.active = true;
-        this.speed = Math.random() * 1.5 + 2; // Slow fall
+        this.speed = Math.random() * 1.5 + 2; 
         this.hue = Math.random() * 360;
     }
     update() {
@@ -652,7 +588,6 @@ class PowerUp {
     draw(ctx) {
         if (!this.active) return;
         ctx.save(); 
-        // Light Beam
         const g = ctx.createLinearGradient(this.x, this.y - 100, this.x, this.y + 20);
         g.addColorStop(0, `hsla(${this.hue}, 100%, 80%, 0)`);
         g.addColorStop(0.5, `hsla(${this.hue}, 100%, 80%, 0.6)`);
@@ -660,7 +595,6 @@ class PowerUp {
         ctx.fillStyle = g;
         ctx.fillRect(this.x - 10, this.y - 100, 20, 150);
         
-        // Orb
         ctx.shadowBlur = 20; ctx.shadowColor = `hsla(${this.hue}, 100%, 50%, 1)`;
         ctx.fillStyle = '#fff';
         ctx.beginPath(); ctx.arc(this.x, this.y, 8, 0, Math.PI*2); ctx.fill();
@@ -690,7 +624,7 @@ class FloatingText {
 // --- GAME LOGIC ---
 const State = {
     playing: false, paused: false, mode: 'chill', timeLeft: 60,
-    mouseX: 0, mouseY: 0, globalHue: 200,
+    mouseX: 0, mouseY: 0, targetMouseX: 0, targetMouseY: 0, globalHue: 200,
     particles: [], blackHoles: [], boss: new Boss(),
     powerUps: [], floatingTexts: [],
     target: null, isHyper: false, inBossDimension: false,
@@ -701,90 +635,66 @@ const State = {
 };
 
 const AudioEngine = {
-    ctx: null, masterGain: null, isMuted: false,
+    ctx: null, masterGain: null,
     
     init() {
         if (this.ctx) return;
         const AC = window.AudioContext || window.webkitAudioContext;
-        this.ctx = new AC(); this.masterGain = this.ctx.createGain();
-        this.masterGain.gain.value = 0.5; // Tăng âm lượng tổng lên chút cho rõ tiếng vang
+        this.ctx = new AC(); 
+        this.masterGain = this.ctx.createGain();
+        this.updateVolume();
         this.masterGain.connect(this.ctx.destination);
     },
     
-    toggleMute() {
-        if(!this.ctx) return;
-        this.isMuted = !this.isMuted;
-        this.masterGain.gain.value = this.isMuted ? 0 : 0.5;
-        document.getElementById('btn-mute').innerText = this.isMuted ? '🔇' : '🔊';
+    updateVolume() {
+        if(!this.masterGain) return;
+        this.masterGain.gain.value = Player.settings.volume / 100;
     },
 
     trigger(event) {
-        if(!this.ctx || this.isMuted) return;
+        if(!this.ctx || this.masterGain.gain.value === 0) return;
         const t = this.ctx.currentTime;
         
-        // Tạo Oscillator (Nguồn âm) và Gain (Âm lượng)
         const osc = this.ctx.createOscillator(); 
         const g = this.ctx.createGain();
-        
-        // Hiệu ứng "Vọng Vũ Trụ": Dùng bộ lọc Lowpass để tiếng mềm mại hơn
         const filter = this.ctx.createBiquadFilter();
-        filter.type = "lowpass";
-        filter.frequency.value = 3000; // Cắt bớt tiếng chói tai
+        filter.type = "lowpass"; filter.frequency.value = 3000;
 
-        osc.connect(filter);
-        filter.connect(g);
-        g.connect(this.masterGain);
+        osc.connect(filter); filter.connect(g); g.connect(this.masterGain);
 
-        // --- BỘ ÂM THANH CHILL PIANO ---
-        // Thang âm C Major Pentatonic (C, D, E, G, A) - Bấm kiểu gì cũng ra nhạc hay
         const chillScale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
 
         if (event === 'collect') {
-            // Chọn nốt ngẫu nhiên trong thang âm
             const note = chillScale[Math.floor(Math.random() * chillScale.length)];
-            
-            // Dùng sóng 'triangle' để nghe giống tiếng Piano điện/Chuông
             osc.type = 'triangle'; 
             osc.frequency.setValueAtTime(note, t);
-
-            // --- TẠO HIỆU ỨNG DA DIẾT (ENVELOPE) ---
             g.gain.setValueAtTime(0, t);
-            g.gain.linearRampToValueAtTime(0.4, t + 0.05); // Đánh vào nhẹ nhàng (không gắt)
-            g.gain.exponentialRampToValueAtTime(0.001, t + 2.5); // Ngân dài 2.5 giây (Tiếng vọng)
-            
+            g.gain.linearRampToValueAtTime(0.4, t + 0.05); 
+            g.gain.exponentialRampToValueAtTime(0.001, t + 2.5); 
             osc.start(t); osc.stop(t + 2.5);
         } 
         else if (event === 'powerup') {
-            // Tiếng Hợp âm (Chord) bay bổng
             osc.type = 'sine';
             osc.frequency.setValueAtTime(440, t); 
-            osc.frequency.exponentialRampToValueAtTime(880, t + 1.5); // Bay lên cao
-            
+            osc.frequency.exponentialRampToValueAtTime(880, t + 1.5); 
             g.gain.setValueAtTime(0.3, t);
             g.gain.linearRampToValueAtTime(0, t + 1.5);
-            
             osc.start(t); osc.stop(t + 1.5);
         } 
         else if (event === 'bossSpawn') {
-            // Tiếng Trầm Hùng (Deep Drone) báo hiệu Boss
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(55, t); // Nốt trầm A1
-            
+            osc.frequency.setValueAtTime(55, t); 
             g.gain.setValueAtTime(0, t);
-            g.gain.linearRampToValueAtTime(0.8, t + 1.0); // Tăng dần âm lượng
-            g.gain.linearRampToValueAtTime(0, t + 4.0);   // Ngân rất dài 4s
-            
+            g.gain.linearRampToValueAtTime(0.8, t + 1.0); 
+            g.gain.linearRampToValueAtTime(0, t + 4.0);   
             osc.start(t); osc.stop(t + 4.0);
         }
         else if (event === 'damage') {
-            // Tiếng va chạm trầm ấm, không chói tai
             osc.type = 'sine';
             osc.frequency.setValueAtTime(150, t);
             osc.frequency.exponentialRampToValueAtTime(0.01, t + 0.5);
-            
             g.gain.setValueAtTime(0.5, t);
             g.gain.linearRampToValueAtTime(0, t + 0.5);
-            
             osc.start(t); osc.stop(t + 0.5);
         }
     }
@@ -839,39 +749,31 @@ const Game = {
     ctx: document.getElementById('canvas').getContext('2d'),
     width: 0, height: 0, timerInterval: null,
     
-   // --- 1. THAY THẾ HÀM INIT NÀY ---
-    // 1. Thay thế hàm INIT (Đã thêm logic Kéo Chuột Vẽ Pháo Hoa)
     init() {
         this.resize(); 
         window.addEventListener('resize', () => this.resize());
         
-        // --- SỬA QUAN TRỌNG Ở ĐÂY: XỬ LÝ KÉO CHUỘT ---
         window.addEventListener('mousemove', e => { 
-            State.mouseX = e.clientX; State.mouseY = e.clientY; 
+            State.targetMouseX = e.clientX; 
+            State.targetMouseY = e.clientY; 
             
-            // Cập nhật vị trí con trỏ ánh sáng
             const cursor = document.getElementById('cursor-light');
-            if(cursor) { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; }
-            
-            // LOGIC MỚI: Nếu đang ở chế độ Cinematic VÀ đang giữ chuột -> Vẽ pháo hoa (Trail)
             if (document.body.classList.contains('cinematic') && cursor && cursor.classList.contains('clicking')) {
-                this.triggerLightShow(true); // true = Chế độ vẽ vệt sáng
+                this.triggerLightShow(true); 
             }
 
             if(AudioEngine.ctx && AudioEngine.ctx.state === 'suspended') AudioEngine.ctx.resume(); 
         });
 
-        // Click chuột -> Bắn nổ to (Explosion)
         window.addEventListener('mousedown', () => {
             document.getElementById('cursor-light')?.classList.add('clicking');
             if (document.body.classList.contains('cinematic')) {
-                this.triggerLightShow(false); // false = Chế độ nổ to
+                this.triggerLightShow(false); 
             }
         });
         
         window.addEventListener('mouseup', () => document.getElementById('cursor-light')?.classList.remove('clicking'));
 
-        // Phím T: Bật/Tắt Cinematic
         window.addEventListener('keydown', e => {
             if (e.key.toLowerCase() === 't') {
                 if (State.mode === 'chill') {
@@ -886,51 +788,41 @@ const Game = {
         requestAnimationFrame(() => this.loop());
     },
 
-    // 2. Hàm Toggle (Giữ nguyên)
     toggleCinematic() {
         const isHidden = document.body.classList.toggle('cinematic');
         if (isHidden) {
-            this.triggerLightShow(false); // Nổ to mở màn
+            this.triggerLightShow(false); 
             UI.showToast("✨ CINEMATIC MODE");
         } else {
             UI.showToast("CINEMATIC MODE: Off");
         }
     },
 
-    // 3. Hàm Trigger (Đã sửa để hỗ trợ cả Nổ và Vẽ)
     triggerLightShow(isTrail = false) {
         const cx = State.mouseX;
         const cy = State.mouseY;
-        
-        // Nếu là Vẽ (Kéo chuột): Chỉ lặp 1 lần, ít hạt để mượt
-        // Nếu là Nổ (Click): Lặp 3 lần sóng để to
         const loops = isTrail ? 1 : 3; 
         
         for(let wave=0; wave<loops; wave++) {
             const baseHue = Math.random() * 360; 
-            
-            // Vẽ: 5 hạt | Nổ: 40+ hạt
             const particleCount = isTrail ? 5 : (40 + (wave * 15)); 
             
             for(let i=0; i<particleCount; i++) {
                 const p = State.particles.find(p => !p.active);
                 if(p) {
-                    // Vẽ: Tốc độ nhanh hơn chút để tạo vệt dài
                     const speed = isTrail ? (Math.random() * 8 + 4) : ((4 + Math.random() * 8) + (wave * 2)); 
-                    
                     p.spawn(cx, cy, baseHue + (i * 10), speed); 
                     
                     if (isTrail) {
-                        p.life = 0.6; // Vệt tan nhanh hơn cho đỡ rối mắt
-                        p.size *= 0.8; // Hạt nhỏ hơn
+                        p.life = 0.6; 
+                        p.size *= 0.8; 
                     } else {
-                        p.decay *= 0.8; // Nổ thì sống lâu hơn
+                        p.decay *= 0.8; 
                     }
                 }
             }
         }
         
-        // Chỉ rung màn hình khi Nổ to, còn vẽ thì êm ái
         if (!isTrail) {
             State.shake = 15; 
             if(AudioEngine.trigger) AudioEngine.trigger('collect');
@@ -978,7 +870,7 @@ const Game = {
         const timerEl = document.getElementById('timer');
         this.timerInterval = setInterval(() => {
             if(!State.playing || State.paused) return;
-            if(State.inBossDimension) return; // Pause Timer in Boss Fight
+            if(State.inBossDimension) return; 
 
             if (State.freezeTime > 0) { 
                 State.freezeTime--; timerEl.classList.add('frozen'); return; 
@@ -992,12 +884,10 @@ const Game = {
         State.playing = false; State.paused = false; clearInterval(this.timerInterval);
         if (State.rushScore > Player.bestRushScore) Player.bestRushScore = State.rushScore;
         
-        // --- KIỂM TRA NHIỆM VỤ (QUESTS) ---
         if (Player.chillLevel >= 100 && !Player.achievements.speedster) { 
             Player.achievements.speedster = true; UI.showToast("🏆 Unlocked: Chill Master"); 
         }
         
-        // --- ĐÃ SỬA: TĂNG LÊN 8000 ĐIỂM ---
         if (State.rushScore >= 8000 && !Player.achievements.survivor) { 
             Player.achievements.survivor = true; UI.showToast("🏆 Unlocked: Void Walker"); 
         }
@@ -1054,22 +944,17 @@ const Game = {
             if(p) p.spawn(this.width/2 + Math.cos(a)*dist, this.height/2 + Math.sin(a)*dist, hue+i*15, speed);
         }
     },
-    // --- THÊM HÀM NÀY VÀO TRONG OBJECT GAME ---
     spawnComboBlast() {
         const cx = this.width / 2;
         const cy = this.height / 2;
-        // Tạo 200 hạt nổ tung từ giữa màn hình
         for (let i = 0; i < 200; i++) {
-            // Màu vàng (Gold) và Xanh (Cyan) xen kẽ
             const hue = Math.random() > 0.5 ? 50 : 180; 
-            const speed = Math.random() * 20 + 5; // Tốc độ cực nhanh
+            const speed = Math.random() * 20 + 5; 
             State.particles.push(new Particle(cx, cy, hue, speed));
         }
-        // Rung màn hình cực mạnh
         State.shake = 60; 
     },
     checkCollisions() {
-        // 1. Xử lý Vật phẩm (PowerUps) - GIỮ NGUYÊN
         State.powerUps.forEach((pu) => {
             if(pu.active && Math.hypot(State.mouseX - pu.x, State.mouseY - pu.y) < 40) {
                 pu.active = false; 
@@ -1096,20 +981,14 @@ const Game = {
                 }
             }
         }); 
-        // --- QUAN TRỌNG: Đóng vòng lặp PowerUp (});) TẠI ĐÂY ---
 
-        // 2. SAU ĐÓ MỚI ĐẾN ĐOẠN KIỂM TRA BOSS (Nằm ngoài vòng lặp trên)
         if (State.inBossDimension && State.boss.active) {
-            // Kiểm tra va chạm: Khoảng cách chuột < Bán kính Boss - 15 (hitbox)
             if (Math.hypot(State.mouseX - State.boss.x, State.mouseY - State.boss.y) < State.boss.size - 15) {
                 AudioEngine.trigger('damage');
-                this.gameOver('BOSS CRUSHED'); // Chết ngay lập tức
+                this.gameOver('BOSS CRUSHED'); 
             }
         }
         
-        // ... (Các đoạn code kiểm tra Target, Hố đen... nằm tiếp theo ở dưới) ... 
-
-        // Check Boss Logic
         if (State.mode === 'rush' && State.inBossDimension) {
             State.boss.update(State.mouseX, State.mouseY);
             return; 
@@ -1179,10 +1058,17 @@ const Game = {
     checkHyper() {
         if(State.level >= 5) State.isHyper = true;
     },
-   loop() {
+    loop() {
         requestAnimationFrame(() => this.loop());
         
-        // 1. XỬ LÝ ÂM THANH & NỀN
+        // --- XỬ LÝ ĐỘ NHẠY CHUỘT ---
+        const lerpFactor = Player.settings.sensitivity / 10;
+        State.mouseX += (State.targetMouseX - State.mouseX) * lerpFactor || 0;
+        State.mouseY += (State.targetMouseY - State.mouseY) * lerpFactor || 0;
+
+        const cursor = document.getElementById('cursor-light');
+        if(cursor) { cursor.style.left = State.mouseX + 'px'; cursor.style.top = State.mouseY + 'px'; }
+
         State.bass = AudioEngine.getBass ? AudioEngine.getBass() : 0;
         let scale = 1 + (State.bass / 400);
 
@@ -1195,20 +1081,17 @@ const Game = {
         this.ctx.fillStyle = bgStyle;
         this.ctx.fillRect(0, 0, this.width, this.height);
         
-        // 2. RUNG MÀN HÌNH
         this.ctx.save(); 
         if (State.shake > 0) {
             const dx = (Math.random() - 0.5) * State.shake; const dy = (Math.random() - 0.5) * State.shake;
             this.ctx.translate(dx, dy); State.shake *= 0.9; if (State.shake < 0.5) State.shake = 0;
         }
 
-        // 3. XỬ LÝ KHI Ở LOBBY
         if(!State.playing) { 
             if(Math.random() < 0.15) { const p = State.particles.find(p => !p.active); if(p) { p.active = true; p.x = Math.random() * this.width; p.y = Math.random() * this.height; p.vx = (Math.random() - 0.5) * 1.5; p.vy = (Math.random() - 0.5) * 1.5; p.life = 1.0; p.decay = 0.002; p.hue = Math.random() * 360; p.size = Math.random() * 2 + 1; } }
             this.ctx.globalCompositeOperation = 'lighter';
             for(let i=0; i<State.particles.length; i++) { let p = State.particles[i]; if(!p.active) continue; p.x += p.vx; p.y += p.vy; p.life -= p.decay; if(p.life <= 0) p.active = false; this.ctx.beginPath(); this.ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); this.ctx.fillStyle = `hsla(${p.hue}, 80%, 60%, ${p.life})`; this.ctx.fill(); let dx = p.x - State.mouseX; let dy = p.y - State.mouseY; let dist = Math.sqrt(dx*dx + dy*dy); if(dist < 250) { this.ctx.beginPath(); this.ctx.strokeStyle = `hsla(${p.hue}, 100%, 80%, ${(1 - dist/250) * p.life})`; this.ctx.lineWidth = 1; this.ctx.moveTo(p.x, p.y); this.ctx.lineTo(State.mouseX, State.mouseY); this.ctx.stroke(); } for(let j=i+1; j<State.particles.length; j++) { let p2 = State.particles[j]; if(!p2.active) continue; let dx2 = p.x - p2.x; let dy2 = p.y - p2.y; let dist2 = Math.sqrt(dx2*dx2 + dy2*dy2); if(dist2 < 100) { this.ctx.beginPath(); this.ctx.strokeStyle = `hsla(${p.hue}, 80%, 50%, ${(1 - dist2/100) * 0.5 * p.life})`; this.ctx.lineWidth = 0.5; this.ctx.moveTo(p.x, p.y); this.ctx.lineTo(p2.x, p2.y); this.ctx.stroke(); } } }
             
-            // Vẽ Cursor Light ở Lobby
             const hasCursorUpgrade = Player.upgrades.cursorLight;
             const cRadius = (hasCursorUpgrade ? 50 : 20) * scale;
             const cHue = (Date.now() * 0.05) % 360;
@@ -1223,7 +1106,6 @@ const Game = {
 
         if (State.paused) { this.ctx.restore(); return; } 
         
-        // 4. LOGIC GAMEPLAY
         const dx = State.mouseX - (this.lastX||State.mouseX); const dy = State.mouseY - (this.lastY||State.mouseY);
         const speed = Math.sqrt(dx*dx + dy*dy); this.lastX = State.mouseX; this.lastY = State.mouseY;
         if(speed > 1) { const c = Math.min(speed/3, 4); for(let i=0; i<c; i++) this.spawnSymmetry(State.mouseX+(Math.random()-0.5)*15, State.mouseY+(Math.random()-0.5)*15, State.globalHue, speed*0.12); }
@@ -1245,7 +1127,6 @@ const Game = {
 
         if (State.mode !== 'chill' && Math.random() < Config.powerUpSpawnRate) { State.powerUps.push(new PowerUp(this.width)); }
 
-        // Vẽ con trỏ chuột trong game
         this.ctx.globalCompositeOperation = 'lighter';
         const hasCursorUpgrade = Player.upgrades.cursorLight;
         const cRadius = (hasCursorUpgrade ? 50 : 15) * scale;
@@ -1263,23 +1144,17 @@ const Game = {
 
         this.ctx.fillStyle = '#fff'; this.ctx.beginPath(); this.ctx.arc(State.mouseX, State.mouseY, hasCursorUpgrade ? 4 : 2, 0, Math.PI*2); this.ctx.fill();
 
-        // 5. VẼ CÁC THỰC THỂ
         State.particles.forEach(p => { p.update(); p.draw(this.ctx); });
-        
-        // Vẽ vật phẩm
         State.powerUps.forEach(pu => { pu.update(); pu.draw(this.ctx); });
 
-        // --- SỬA: CHỈ VẼ CHỮ SỐ (+10, +500) KHI KHÔNG PHẢI CINEMATIC ---
         State.floatingTexts = State.floatingTexts.filter(ft => ft.active);
         State.floatingTexts.forEach(ft => { 
             ft.update(); 
-            // Nếu KHÔNG có class cinematic thì mới vẽ số
             if(!document.body.classList.contains('cinematic')) {
                 ft.draw(this.ctx); 
             }
         });
         
-        // --- SỬA: LUÔN VẼ TARGET ORB (DÙ CÓ CINEMATIC HAY KHÔNG) ---
         if(State.target) {
             this.ctx.globalCompositeOperation = 'source-over';
             const p = 1 + Math.sin(Date.now() * 0.008) * 0.15;
@@ -1342,14 +1217,10 @@ const UI = {
             }
 
             const scale = Math.min(1 + (State.combo / 50), 2.0);
-            
-            // --- SỬA LỖI: CHỈ DÙNG SCALE (BỎ translate ĐỂ KHÔNG BỊ LỆCH) ---
             el.style.transform = `scale(${scale})`; 
             
         } else {
             el.classList.remove('active', 'rainbow', 'godlike');
-            
-            // --- SỬA LỖI: BỎ translate Ở ĐÂY LUÔN ---
             el.style.transform = 'scale(0.5)';
         }
     },
@@ -1383,13 +1254,23 @@ const UI = {
     toggleQuest(show) {
         document.getElementById('quest-layer').style.display = show ? 'flex' : 'none';
         if (show) {
-            this.initQuests(); // QUAN TRỌNG: Gọi hàm tạo danh sách mới
+            this.initQuests(); 
         } else {
             UI.updateLobby();
         }
     },
     toggleHelp(show) {
         document.getElementById('help-layer').style.display = show ? 'flex' : 'none';
+    },
+    toggleSettings(show) {
+        document.getElementById('settings-layer').style.display = show ? 'flex' : 'none';
+        if (!show) UI.updateLobby();
+    },
+    applySettingsToDOM() {
+        document.getElementById('vol-slider').value = Player.settings.volume;
+        document.getElementById('vol-val').innerText = Player.settings.volume + '%';
+        document.getElementById('sens-slider').value = Player.settings.sensitivity;
+        document.getElementById('sens-val').innerText = Player.settings.sensitivity;
     },
     updateShopItems() {
         const checkItem = (key) => {
@@ -1411,27 +1292,21 @@ const UI = {
         };
         ['time', 'shield', 'bgflow', 'cursorLight', 'brush', 'prism', 'echo', 'stellarVIP', 'aura'].forEach(k => checkItem(k));
     },
-    // --- HÀM MỚI: TẠO DANH SÁCH NHIỆM VỤ TỰ ĐỘNG ---
     initQuests() {
-        // Tìm khung chứa danh sách nhiệm vụ trong HTML cũ
         const grid = document.querySelector('#quest-layer .list-grid');
         if(!grid) return;
         
-        grid.innerHTML = ""; // Xóa danh sách cũ (để không bị trùng)
+        grid.innerHTML = ""; 
 
         const quests = [
             {id:'played', name:'First Spark', desc: 'Chơi 1 ván bất kỳ.', icon: '💡', check:Player.achievements.played},
             {id:'speedster', name:'Chill Master', desc: 'Đạt <b>Level 100</b> trong Chill Relax.', icon: '⚡', check:Player.achievements.speedster},
-            
-            // --- ĐÃ SỬA: CẬP NHẬT HIỂN THỊ 8000 ĐIỂM ---
             {id:'survivor', name:'Void Walker', desc: 'Đạt <b>8000 điểm</b> trong Time Rush.', icon: '🛡️', check:Player.achievements.survivor}, 
-            
             {id:'tycoon', name:'Star Tycoon', desc: 'Tích lũy <b>50000 Stardust</b>.', icon: '💎', check:Player.achievements.tycoon}
         ];
 
         quests.forEach(q => {
             const div = document.createElement('div');
-            // Sử dụng lại class CSS cũ để giữ nguyên giao diện đẹp
             div.className = `list-item quest-item ${q.check?'unlocked':'locked'}`;
             div.innerHTML = `
                 <div class="item-icon">${q.icon}</div>
@@ -1444,7 +1319,6 @@ const UI = {
             grid.appendChild(div);
         });
     }
-    
 };
 
 const Shop = {
@@ -1453,7 +1327,6 @@ const Shop = {
         const cost = Prices[item];
         if(Player.currency >= cost) {
             Player.currency -= cost; Player.upgrades[item] = true; 
-            // Auto equip specific items on buy
             if(item === 'aura') Player.equipped.aura = true;
             
             Player.save();
@@ -1463,23 +1336,35 @@ const Shop = {
     },
     toggleEquip(item, price) {
         if (Player.upgrades[item]) {
-            // Toggle logic
             Player.equipped[item] = !Player.equipped[item];
             Player.save();
             UI.updateShopItems();
             return; 
         }
-        // Buy Logic if not owned
         if (Player.currency >= price) {
             Player.currency -= price;
             Player.upgrades[item] = true;
-            Player.equipped[item] = true; // Auto equip
+            Player.equipped[item] = true; 
             Player.save();
             document.getElementById('shop-currency').innerText = Player.currency;
             UI.updateShopItems(); AudioEngine.trigger('collect'); 
         }
     }
 };
+
+// Cài đặt Event cho Sliders
+document.getElementById('vol-slider').addEventListener('input', e => {
+    Player.settings.volume = e.target.value;
+    document.getElementById('vol-val').innerText = e.target.value + '%';
+    AudioEngine.updateVolume();
+    Player.save();
+});
+
+document.getElementById('sens-slider').addEventListener('input', e => {
+    Player.settings.sensitivity = e.target.value;
+    document.getElementById('sens-val').innerText = e.target.value;
+    Player.save();
+});
 
 // Initial state: Show Login
 document.getElementById('ui-layer').style.display = 'none';
